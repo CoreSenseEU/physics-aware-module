@@ -1,0 +1,25 @@
+# Learn analytic models from data -- long-running (up to hours), cancellable.
+# Goal carries the session id plus exactly the five agreed ANSR parameters;
+# everything else takes its SRConfig default. Data is passed by file path
+# (absolute, on the node host) and staged into the session workspace.
+string session_id
+string topology_path        # required; staged into <workspace>/topologies/
+string train_data_path      # required; staged into <workspace>/data/
+string valid_data_path      # required; staged into <workspace>/data/
+string constraints_path     # "" = no constraints (-c omitted entirely)
+string outfolder            # results dir name under the session workspace, e.g. "results"
+---
+int8 CODE_FINISHED=0        # ANSR exited 0 (ran its default budget to completion)
+int8 CODE_CANCELLED=1       # client cancel or node watchdog; process group reaped
+int8 CODE_FAILED=2          # nonzero exit or spawn failure; message carries stderr tail
+int8 code
+string message
+AnalyticModel[] models      # final archive mirror (highest version); may be empty on failure
+string results_path         # absolute <workspace>/<outfolder>/seed=1
+---
+float64 elapsed_seconds
+string status               # "STARTING" (no mirror yet) | "RUNNING" | "FINALIZING"
+uint32 dataset_version      # highest current_best_<v> observed (0 until first dump)
+uint32 num_models           # individuals in the latest archive overview
+float64 best_valid_loss     # NaN until the first mirror appears
+float64 best_complexity     # complexity of the best individual (NaN until known)

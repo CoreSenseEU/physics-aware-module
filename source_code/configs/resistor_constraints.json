@@ -1,0 +1,37 @@
+{
+  "constraints": 
+  [
+    {
+      "class": "constraint_gtvalue",
+      "weight": 1.0,
+      "domain": [[[0.001, 40], [0.001, 40]]],
+      "nbOfSamples": 50,
+      "args": {
+        "test_value": 0.0
+      }
+    },
+    {
+      "class": "constraint_resistors_diagonal",
+      "weight": 1.0,
+      "domain": [[[0.001, 40], [0.001, 40]]],
+      "nbOfSamples": 50,
+      "args": {}
+    },
+    {
+      "class": "constraint_resistors_ltinput",
+      "weight": 1.0,
+      "domain": [[[0.001, 40], [0.001, 40]]],
+      "nbOfSamples": 50,
+      "args": {}
+    },
+    {
+      "class": "constraint_symmetry2vars",
+      "weight": 1.0,
+      "domain": [[[0.001, 40], [0.001, 40]]],
+      "nbOfSamples": 50,
+      "args": {
+        "vars": [0,1]
+      }
+    }
+  ]
+}

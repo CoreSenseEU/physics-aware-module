@@ -1,0 +1,44 @@
+% Session lifecycle state machine. Bare tikzpicture; styles from chapter-preamble.
+% Layout notes: \\ breaks at top level of node text only; transitions to ENDED
+% are routed as elbows so their labels sit beside vertical segments, never on
+% a line or a box.
+\begin{tikzpicture}
+
+  \node[circle, fill=ros2Accent, inner sep=1.6pt] (init) {};
+  \node[ros2/state, right=26mm of init] (open) {OPEN};
+  \node[ros2/state, right=36mm of open] (running) {RUNNING};
+  \node[ros2/state] (ended) at ($(open.south)!0.5!(running.south) + (0,-24mm)$) {ENDED};
+
+  % ---------------- creation ----------------
+  \draw[ros2/accent arrow] (init) -- (open)
+    node[ros2/lbl, midway, above=0.7mm]{\texttt{start\_session}};
+
+  % ---------------- OPEN <-> RUNNING ----------------
+  \draw[ros2/accent arrow] ([yshift=2.5mm]open.east) -- ([yshift=2.5mm]running.west)
+    node[ros2/lbl, midway, above=0.7mm, align=center]
+    {\texttt{learn\_model} goal\\accepted};
+  \draw[ros2/accent arrow] ([yshift=-2.5mm]running.west) -- ([yshift=-2.5mm]open.east)
+    node[ros2/lbl, midway, below=0.7mm, align=center]{run finished /\\cancelled};
+
+  % ---------------- closing ----------------
+  % Elbows: straight down, then horizontally into ENDED; labels sit beside
+  % the vertical segments.
+  \coordinate (lcorner) at (open.south |- ended.west);
+  \draw[ros2/accent arrow] (open.south) -- (lcorner) -- (ended.west);
+  \node[ros2/lbl, anchor=east, xshift=-1.5mm]
+    at ($(open.south)!0.55!(lcorner)$) {\texttt{end\_session}};
+
+  \coordinate (rcorner) at (running.south |- ended.east);
+  \draw[ros2/accent arrow] (running.south) -- (rcorner) -- (ended.east);
+  \node[ros2/lbl, anchor=west, align=left, xshift=1.5mm]
+    at ($(running.south)!0.55!(rcorner)$)
+    {\texttt{end\_session} \texttt{force:=true}\\
+     {\scriptsize(run terminated first)}};
+
+  % ---------------- annotations ----------------
+  \node[ros2/lbl, text=black!60, align=center, above=10mm of open.north]
+    {models remain retrievable\\via \texttt{get\_model} after the run};
+  \node[ros2/lbl, text=black!60, align=center, above=10mm of running.north]
+    {while any run is active, further\\\texttt{learn\_model} goals are rejected};
+
+\end{tikzpicture}

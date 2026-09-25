@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Asynchronous Neuro-Evolutionary Symbolic Regression with Maturity-Based Replacement. A novel neuro-evolutionary algorithm that relies on asynchronous refinement of network parameters and a maturity-based replacement strategy.">
+  <meta name="keywords" content="Symbolic Regression, Neuroevolution, Genetic Programming, Multi-objective Optimization, ANSR">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ANSR: Asynchronous Neuro-Evolutionary Symbolic Regression</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <!-- Bulma CSS (same as Nerfies) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Academic Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <style>
+    html, body {
+      background: white;
+    }
+
+    body {
+      font-family: 'Noto Sans', sans-serif;
+    }
+
+    .navbar {
+      background: white;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .navbar-item {
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 500;
+    }
+
+    .hero {
+      background: white;
+    }
+
+    .hero .title {
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .author-block {
+      display: inline-block;
+      margin-right: 0.5em;
+    }
+
+    .author-block a {
+      color: #3273dc;
+    }
+
+    .affiliation-block {
+      font-size: 0.95em;
+      color: #555;
+    }
+
+    .publication-links .button {
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 500;
+    }
+
+    .publication-links .button .icon {
+      margin-right: 4px;
+    }
+
+    .section-title {
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 600;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .abstract-text {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      text-align: justify;
+      color: #333;
+    }
+
+    .teaser-figure {
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .teaser-figure img {
+      width: 65%;
+      max-width: 65%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+
+    .teaser-caption {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.75rem;
+    }
+
+    .conference-badge {
+      display: inline-block;
+      background: #3273dc;
+      color: white;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-family: 'Google Sans', sans-serif;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    footer.footer {
+      background: white;
+      padding: 2rem 1.5rem;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    footer a {
+      color: #3273dc;
+    }
+
+    .container.is-max-desktop {
+      max-width: 960px;
+    }
+
+    /* Button styles */
+    .publication-links {
+      margin-top: 1.25rem;
+    }
+
+    .publication-links .button.is-rounded {
+      border-radius: 20px;
+      padding: 0.6em 1.2em;
+      font-size: 0.9rem;
+    }
+
+    .publication-links .button.is-dark {
+      background: #363636;
+    }
+
+    .columns.is-centered {
+      justify-content: center;
+    }
+
+    /* Author superscript */
+    sup {
+      font-size: 0.7em;
+      color: #888;
+    }
+
+    /* Separator line */
+    .divider {
+      border: none;
+      border-top: 1px solid #e8e8e8;
+      margin: 0;
+    }
+
+    /* Abstract section */
+    .abstract-section {
+      background: white;
+    }
+
+    /* Teaser section */
+    .teaser-section {
+      background: white;
+      padding-top: 2rem;
+      padding-bottom: 2.5rem;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      background: #f0f4ff;
+      border-left: 4px solid #3273dc;
+      border-radius: 4px;
+      padding: 1rem 1.25rem;
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .highlight-box strong {
+      color: #3273dc;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://github.com/jirkakubalik/ANSR_dev/tree/main_ansr_github" target="_blank">
+        <span class="icon"><i class="fab fa-github"></i></span>
+        <span>ANSR</span>
+      </a>
+    </div>
+  </div>
+</nav>
+-->
+
+<!-- Hero / Title Section -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+
+          <span class="conference-badge">GECCO 2026</span>
+
+          <h1 class="title is-2 publication-title">
+            Asynchronous Neuro-Evolutionary Symbolic Regression with Maturity-Based Replacement
+          </h1>
+
+          <!-- Authors -->
+          <div class="is-size-5 publication-authors" style="margin-top: 1.2rem;">
+            <span class="author-block">
+              <a href="https://people.ciirc.cvut.cz/~kubalik/">Jiří Kubalík</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="mailto:nada.fucelova@cvut.cz">Naďa Fučelová</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="http://www.robertbabuska.com/">Robert Babuška</a><sup>1,2</sup>
+            </span>
+          </div>
+
+          <!-- Affiliations -->
+          <div class="is-size-6 affiliation-block" style="margin-top: 0.75rem; line-height: 1.8;">
+            <span><sup>1</sup> CIIRC, CTU in Prague, Czech Republic</span>&nbsp;&nbsp;
+            <span><sup>2</sup> Dept. of Cognitive Robotics, TU Delft, The Netherlands</span>
+          </div>
+
+          <!-- Links -->
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="https://zenodo.org/records/20025529" target="_blank"
+                 class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>Paper</span>
+              </a>
+            </span>
+            &nbsp;
+            <span class="link-block">
+              <a href="https://github.com/jirkakubalik/ANSR_dev/tree/main_ansr_github" target="_blank"
+                 class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Code</span>
+              </a>
+            </span>
+<!--
+            &nbsp;
+            <span class="link-block">
+              <a href="https://doi.org/10.1145/3795095.3805164" target="_blank"
+                 class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="ai ai-acmdl"></i></span>
+                <span>ACM DL</span>
+              </a>
+            </span>
+-->		
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- Teaser Figure -->
+<section class="teaser-section">
+  <div class="container is-max-desktop">
+    <div class="teaser-figure">
+      <img src="static/images/nn_representation_weights.png"
+           alt="Neural network representation used in ANSR. The figure shows a feedforward network with two hidden layers, learnable units (white), copy units (green), active learnable links (blue), inactive learnable links (blue dotted), active skip connections (red), and inactive skip connections (red dotted).">
+      <p class="teaser-caption">
+        Neural network representing the expression
+        <em>f(x₀, x₁) = c₀ · (c₁ · (c₂ · x₀) · (c₃ · x₁)) / (c₄ · x₀ + c₅ · x₁)</em>.
+		<br>
+        <span style="color: #2563eb; font-weight: 600;">Blue edges</span> are trainable links;
+        <span style="color: #dc2626; font-weight: 600;">red edges</span> are skip connections.
+		<br>
+        Bold edges remain enabled after training and form the analytic formula.
+      </p>    
+	</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- Abstract -->
+<section class="section abstract-section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="section-title">Abstract</h2>
+        <div class="content has-text-justified abstract-text">
+          <p>
+            We consider a <strong>neuro-evolutionary symbolic regression</strong>, an approach
+            in which mathematical formulas are internally represented by feedforward
+            neural networks. Gradient-free global exploration of the network topology
+            space is combined with gradient-based parameter learning.
+          </p>
+          <p>
+            From the perspective of evolutionary algorithms, this approach has a potential
+            weakness: newly generated networks produced by genetic operators usually
+            require intensive parameter tuning. If this optimization has not yet converged,
+            such networks may be prematurely discarded due to poor performance, thereby
+            losing the opportunity to contribute their true potential to the evolutionary
+            process. Such a waste of innovative, potentially promising topologies can
+            reduce the algorithm's efficiency.
+          </p>
+          <p>
+            To address this limitation, we propose a neuro-evolutionary algorithm that
+            relies on <strong>asynchronous refinement</strong> of network parameters and a
+            <strong>maturity-based replacement strategy</strong>. Thus, newly created networks are
+            allowed to coexist and develop alongside their parental networks, while being
+            compared only with peers of similar maturity. The proposed method was evaluated
+            on six benchmarks and compared to the original evolutionary approach.
+          </p>
+
+          <div class="highlight-box">
+            <strong>Key Result:</strong> ANSR consistently outperforms the standard neuro-evolutionary
+            baseline (SEASR) in solution quality and convergence efficiency across all six
+            benchmark problems — including three synthetic and three physics-based test cases.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Video: resistors -->
+<section class="section" style="background: white; padding-top: 2rem; padding-bottom: 2.5rem;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="section-title">Model evolution for the parallel resistors problem</h2>
+        <video width="90%" controls>
+          <source src="static/images/model_evolution_resistors_423_range=50.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Video -->
+<section class="section" style="background: white; padding-top: 2rem; padding-bottom: 2.5rem;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="section-title">Model evolution for the Nguyen-9c problem</h2>
+        <video width="90%" controls>
+          <source src="static/images/model_evolution_nguyen-9c_602_range=4.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Video -->
+<section class="section" style="background: white; padding-top: 2rem; padding-bottom: 2.5rem;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="section-title">Model evolution for f(x) = sin(2.7 x) + 0.37 x^2 + 0.4</h2>
+        <video width="90%" controls>
+          <source src="static/images/model_evolution_f_sin27x_037xto2_04_447_range=10.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Video -->
+<section class="section" style="background: white; padding-top: 2rem; padding-bottom: 2.5rem;">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="section-title">Model evolution for f(x) = sin(2.7 x) + 0.37 x^2 + 0.4</h2>
+        <p class="subtitle is-6" style="margin-top: -0.4rem; margin-bottom: 1rem; color: #555;">
+		  Solution obtained using the approximation of sin(2.7&thinsp;x)&thinsp; = &thinsp;2&thinsp;sin(1.35&thinsp;x)&thinsp;cos(1.35&thinsp;x)
+        </p>
+        <video width="90%" controls>
+          <source src="static/images/model_evolution_f_sin27x_037xto2_04_626_range=10.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8 has-text-centered">
+        <p>
+          This work received funding from the European Union's Horizon Europe programme
+          under grant agreement No. 101070254 CORESENSE, and was partly supported by
+          project ROBOPROX (CZ.02.01.01/00/22_008/0004590).
+        </p>
+        <p style="margin-top: 0.75rem;">
+          Website template adapted from
+          <a href="https://nerfies.github.io" target="_blank">Nerfies</a>
+          under a
+          <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a> license.
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Navbar burger JS -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    $navbarBurgers.forEach(el => {
+      el.addEventListener('click', () => {
+        const target = el.dataset.target;
+        const $target = document.getElementById(target);
+        el.classList.toggle('is-active');
+        if ($target) $target.classList.toggle('is-active');
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

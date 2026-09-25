@@ -1,0 +1,56 @@
+% Additive preamble for the ROS 2 chapter — load once in the master's preamble:
+%   \input{ros2-chapter/chapter-preamble}
+%
+% Strictly additive and collision-safe: everything is ros2-prefixed, nothing
+% global is redefined. Requires: xcolor, listings, tikz (positioning,
+% arrows.meta, fit, backgrounds, calc), algorithm2e, booktabs.
+
+\definecolor{ros2Accent}{RGB}{0,106,113}     % CoreSense teal
+\definecolor{ros2Comment}{RGB}{90,110,120}   % muted slate for listing comments
+\definecolor{ros2Frame}{RGB}{200,210,214}    % light rules around listings
+
+% Style for ROS interface files (.msg/.srv/.action) and directory trees.
+\lstdefinestyle{ros2iface}{
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=true,
+  comment=[l]{\#},
+  commentstyle=\color{ros2Comment}\itshape,
+  frame=lines,
+  rulecolor=\color{ros2Frame},
+  aboveskip=0.8\baselineskip,
+  belowskip=0.8\baselineskip,
+}
+
+% Style for shell sessions (build recipe, ros2 CLI walkthrough).
+\lstdefinestyle{ros2shell}{
+  language=bash,
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  keywordstyle=\ttfamily\footnotesize,   % no keyword highlighting noise in shell
+  comment=[l]{\#},
+  commentstyle=\color{ros2Comment}\itshape,
+  frame=lines,
+  rulecolor=\color{ros2Frame},
+  aboveskip=0.8\baselineskip,
+  belowskip=0.8\baselineskip,
+}
+
+% Shared TikZ styles for the two chapter figures.
+\tikzset{
+  ros2/box/.style={draw, rounded corners=2pt, align=center, inner sep=5pt,
+                   font=\footnotesize\sffamily},
+  ros2/proc/.style={ros2/box, fill=ros2Accent!10, draw=ros2Accent},
+  ros2/store/.style={ros2/box, fill=black!4, draw=black!45},
+  ros2/state/.style={draw=ros2Accent, fill=ros2Accent!10, rounded corners=8pt,
+                     align=center, inner sep=7pt, font=\footnotesize\sffamily\bfseries},
+  ros2/arrow/.style={-{Stealth[length=2.4mm]}, thick, draw=black!70},
+  ros2/accent arrow/.style={ros2/arrow, draw=ros2Accent},
+  ros2/lbl/.style={font=\scriptsize\sffamily, align=center},
+}

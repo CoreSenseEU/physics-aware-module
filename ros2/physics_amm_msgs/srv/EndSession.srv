@@ -1,0 +1,8 @@
+# Close a session and (by default) delete its workspace.
+# If a learning run is active: force=false refuses, force=true cancels the run
+# (process-group SIGTERM -> SIGKILL) before closing.
+string session_id
+bool force
+---
+bool success
+string message

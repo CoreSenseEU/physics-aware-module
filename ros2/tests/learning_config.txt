@@ -1,0 +1,2 @@
+ros2 action send_goal /physics_amm/learn_model physics_amm_msgs/action/LearnModel \ 
+"{session_id: '2df416f8-e7cc-4fae-bb61-8eb7b50b7ac9', topology_path: '/root/ANSR_dev/source_code/topologies/paper-topology_resistors_general_paper_A.txt', train_data_path: '/root/ANSR_dev/source_code/data/resistors/resistors_train_500_noise005.csv', valid_data_path: '/root/ANSR_dev/source_code/data/resistors/resistors_validation_500_noise005.csv', constraints_path: '', outfolder: 'results'}"

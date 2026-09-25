@@ -1,0 +1,8 @@
+UnitMultiply:2, UnitSin:2, UnitTanh:2, UnitIdent:2
+identities:true
+UnitMultiply:2, UnitSin:2, UnitTanh:2, UnitIdent:2
+identities:true
+UnitMultiply:2, UnitSin:2, UnitTanh:2, UnitIdent:2, UnitDivide:1
+identities:true
+UnitIdent:1
+identities:false

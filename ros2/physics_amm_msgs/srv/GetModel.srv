@@ -1,0 +1,16 @@
+# Return the current best-so-far analytic model(s) for a session, read from the
+# on-disk current_best_<version>/ mirror (highest version present). Available
+# while a learning run is active and after it has finished.
+#
+# Staleness caveat: mirror writes are throttled (saveCurrentBestMinIntervalS,
+# default 5 s), so results may lag live search state by a few seconds. Right
+# after a training-data swap the new version's mirror may briefly be sparse
+# while individuals are re-measured.
+string session_id
+string population    # "" = node default ("archive") | "archive" | "mainpop"
+uint32 max_models    # 0 = all (overview order preserved)
+---
+bool success
+string message
+uint32 dataset_version
+AnalyticModel[] models

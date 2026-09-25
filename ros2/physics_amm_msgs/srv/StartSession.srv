@@ -1,0 +1,5 @@
+# Open a learning session. Data arrives later, with the LearnModel goal.
+---
+bool success
+string message
+string session_id   # UUID4 identifying the session in all other calls

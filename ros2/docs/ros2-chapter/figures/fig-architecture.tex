@@ -1,0 +1,91 @@
+% Architecture / data-flow figure. Bare tikzpicture; styles from chapter-preamble.
+% Layout notes: every \\ line break sits at the TOP LEVEL of a node's text
+% (TikZ's align machinery does not see breaks nested in brace groups), and all
+% edge labels are anchored beside their line segments so no label crosses a
+% line, a box border, or another label.
+\begin{tikzpicture}
+
+  % ---------------- node column ----------------
+  \node[ros2/proc, minimum width=3.9cm] (services)
+    {Services\\[1pt]
+     {\scriptsize\texttt{start\_session} $\cdot$ \texttt{end\_session}}\\
+     {\scriptsize\texttt{get\_model} $\cdot$ \texttt{set\_session\_data}}};
+  \node[ros2/proc, below=7mm of services, minimum width=3.9cm] (action)
+    {Action server\\[1pt]
+     {\scriptsize\texttt{learn\_model}}};
+  \node[ros2/proc, below=7mm of action, minimum width=3.9cm] (manager)
+    {Session manager\\[1pt]
+     {\scriptsize UUID registry, run slot}};
+
+  \begin{scope}[on background layer]
+    \node[ros2/box, fit=(services)(action)(manager), inner sep=7pt,
+          fill=black!2, draw=black!35] (node) {};
+  \end{scope}
+  % Title anchored at the box's top-LEFT corner, away from the top-right
+  % arrow label.
+  \node[ros2/lbl, anchor=south west, inner sep=1pt]
+    at ([yshift=1mm]node.north west)
+    {\textbf{\texttt{physics\_amm} node} {\scriptsize(multi-threaded executor)}};
+
+  % ---------------- client column ----------------
+  \node[ros2/box, left=21mm of action, minimum width=2.6cm, minimum height=1.5cm]
+    (client)
+    {Client\\[1pt]
+     {\scriptsize application node}\\
+     {\scriptsize or \texttt{ros2} CLI}};
+
+  % ---------------- session column ----------------
+  \node[ros2/store, right=26mm of services, minimum width=3.8cm] (workspace)
+    {Session workspace\\[1pt]
+     {\scriptsize\texttt{data/}\ \texttt{topologies/}\ \texttt{configs/}}\\
+     {\scriptsize\texttt{results/}\ \texttt{logs/}}};
+  \node[ros2/proc, below=10mm of workspace, minimum width=3.8cm] (ansr)
+    {ANSR run {\scriptsize(own process group)}\\[1pt]
+     {\scriptsize\texttt{Main.py} $\rightarrow$ Dask scheduler}\\
+     {\scriptsize$+$ worker pool (PyTorch)}};
+  \node[ros2/store, below=10mm of ansr, minimum width=3.8cm] (mirror)
+    {Best-so-far export\\[1pt]
+     {\scriptsize\texttt{results/seed=1/\ldots/}}\\
+     {\scriptsize\texttt{current\_best\_<v>/}}};
+
+  % ---------------- client -> node edges ----------------
+  % Elbow up to the services row; label sits left of the vertical riser,
+  % well above the client box.
+  \coordinate (reqcorner) at ([xshift=9mm, yshift=4mm]client.east);
+  \coordinate (reqtop)    at (reqcorner |- services.west);
+  \draw[ros2/accent arrow]
+    ([yshift=4mm]client.east) -- (reqcorner) -- (reqtop) -- (services.west);
+  \node[ros2/lbl, anchor=east, xshift=-1.5mm]
+    at ($(reqcorner)!0.72!(reqtop)$) {requests};
+
+  % Straight into the action row (client is centred on it); label below the
+  % client box, clear of the arrow.
+  \draw[ros2/accent arrow] (client.east) -- (action.west);
+  \node[ros2/lbl, anchor=north, align=center]
+    at ([yshift=-2.5mm]client.south)
+    {goal / cancel /\\feedback / result};
+
+  % ---------------- node <-> session edges ----------------
+  \draw[ros2/arrow] (services.east) -- (workspace.west);
+  \node[ros2/lbl, anchor=south, align=center, yshift=1mm]
+    at ($(node.east |- services.east)!0.5!(workspace.west)$)
+    {stage \& swap\\data files};
+
+  \draw[ros2/arrow] (action.east) -- (ansr.west);
+  \node[ros2/lbl, anchor=south, align=center, yshift=1.5mm]
+    at ($(node.east |- action.east)!0.55!(ansr.west)$)
+    {spawn, monitor,\\terminate};
+
+  \coordinate (readcorner) at ([xshift=-10mm]mirror.west);
+  \draw[ros2/arrow] (mirror.west) -- (readcorner) |- (manager.east);
+  \node[ros2/lbl, anchor=east, align=right, xshift=-1.5mm]
+    at ($(readcorner)!0.5!(readcorner |- manager.east)$)
+    {read\\models};
+
+  % ---------------- session column edges ----------------
+  \draw[ros2/arrow] (workspace.south) -- (ansr.north)
+    node[ros2/lbl, midway, right=1mm]{cwd, inputs};
+  \draw[ros2/arrow] (ansr.south) -- (mirror.north)
+    node[ros2/lbl, midway, right=1mm, align=left]{continuous\\export};
+
+\end{tikzpicture}

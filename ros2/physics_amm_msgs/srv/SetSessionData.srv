@@ -1,0 +1,11 @@
+# Swap the training (and optionally validation) data of a session mid-run.
+# The node copies the new file's content atomically over the staged file in the
+# session workspace, preserving the watched filename; the mtime change triggers
+# the core's reload_data() -> _advance_dataset_version(), so a new
+# current_best_<version+1>/ mirror appears once individuals are re-measured.
+string session_id
+string train_data_path   # absolute path on the node host
+string valid_data_path   # "" = keep current validation data
+---
+bool success
+string message

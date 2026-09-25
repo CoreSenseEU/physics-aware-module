@@ -1,0 +1,40 @@
+% Standalone compile harness for the ROS 2 chapter.
+%
+% This file approximates the CoreSense deliverable look (sans-serif body,
+% teal accents, per-chapter float numbering) so the chapter can be built and
+% reviewed independently. It is NOT part of the hand-over: the deliverable
+% integrates ros2-chapter/ directly (see README.md).
+
+\documentclass[11pt,a4paper]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[a4paper,margin=2.6cm]{geometry}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,fit,backgrounds,calc}
+\usepackage[ruled,linesnumbered,vlined]{algorithm2e}
+
+% CoreSense-ish accent (teal like the D3.7 headings/links).
+\definecolor{csTeal}{RGB}{0,106,113}
+\usepackage[colorlinks=true,linkcolor=csTeal,urlcolor=csTeal,citecolor=csTeal]{hyperref}
+
+% Chapter-specific additive definitions (colors, listing styles, tikz styles).
+% The deliverable master must load this line in its preamble as well.
+\input{ros2-chapter/chapter-preamble}
+
+\begin{document}
+
+\input{ros2-chapter/chapter}
+
+\bibliographystyle{unsrt}
+\bibliography{ros2-chapter/refs}
+
+\end{document}

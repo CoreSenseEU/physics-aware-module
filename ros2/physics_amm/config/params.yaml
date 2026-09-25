@@ -1,0 +1,30 @@
+/**/physics_amm:
+  ros__parameters:
+    # Root directory for per-session workspaces (data/, topologies/, configs/,
+    # results/, logs/ are created per session underneath).
+    workspace_root: "~/.ros/physics_amm/sessions"
+    # Directory containing the ANSR core (Main.py). Empty = the copy installed
+    # to share/physics_amm/ansr_source. Point at the repo's ansr/source_code
+    # for development.
+    ansr_source_dir: ""
+    # Interpreter for the ANSR subprocess. Empty = the node's own interpreter
+    # (the venv, when the workspace was built with the venv active).
+    python_executable: ""
+    # ANSR spawns a fixed 4-worker Dask tree per run; keep runs serialized on
+    # shared CPUs. Raising this also risks Dask dashboard port collisions.
+    max_concurrent_runs: 1
+    max_sessions: 8
+    # SIGTERM -> SIGKILL grace period for process-group cancellation.
+    sigterm_grace_s: 10.0
+    # Action feedback + cancellation poll rate.
+    feedback_period_s: 2.0
+    # Node-side wall-time watchdog: a run that neither finishes nor gets
+    # cancelled is terminated after this many seconds (the core's own default
+    # budget is maxTotalTime=36000 s). 0 disables the watchdog.
+    max_run_seconds: 36000.0
+    # Which mirror GetModel reads when the request leaves population empty:
+    # "archive" (non-dominated best-so-far) or "mainpop" (live population).
+    default_population: "archive"
+    # Mirror dumps wipe the folder before rewriting; retry reads this often.
+    mirror_read_retries: 3
+    cleanup_workspace_on_end: true
