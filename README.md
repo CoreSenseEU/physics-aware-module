@@ -1,4 +1,4 @@
-[🌐 Project Page](https://jirkakubalik.github.io/ANSR_dev/)
+[🌐 Project Page](https://CoreSenseEU.github.io/physics-aware-module/)
 
 # Asynchronous Neuro-Evolutionary Symbolic Regression with Maturity-Based Replacement
 
