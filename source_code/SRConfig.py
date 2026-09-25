@@ -91,7 +91,7 @@ initPopulationFromExpressions: str = ""
 start_time: float = time.time()
 maxTotalTime: int = 36000  # --- maximum total time of the run in seconds
 maxTotalBackprops: int = (
-    50000  # --- maximum number of backpropagation iterations over the whole run
+    500000  # --- maximum number of backpropagation iterations over the whole run
 )
 client_restart_period: int = 5000  # --- number of tuning epochs between client restarts
 archiveIdMin: int = (
